@@ -23,12 +23,7 @@ function getContactById(contactId) {
   const rawdata = fs.readFileSync(contactsPath);
   const data = JSON.parse(rawdata);
 
-  let neededContact;
-  for(let contact of data) {
-    if(contact.id == contactId.toString()) {
-      neededContact = contact;
-    }
-  }
+  let neededContact = data.find(contact => contact.id == contactId.toString());
 
   if(!neededContact) {
     return `No contact with id ${contactId} in database`;
@@ -55,9 +50,13 @@ function removeContact(contactId) {
     fs.writeFileSync(contactsPath, JSON.stringify(data));
 
     console.log("Removing Contact Result - Success");
+
+    return findContactResult;
   } else {
     console.log(findContactResult);
     console.log("Removing Contact Result - Failure");
+
+    return null;
   }
 
 }
@@ -92,6 +91,8 @@ function addContact(name, email, phone) {
   fs.writeFileSync(contactsPath, JSON.stringify(data));
 
   console.log("Adding Contact Result - Success");
+
+  return newContact;
 }
 
 module.exports = { listContacts, getContactById, removeContact, addContact };
